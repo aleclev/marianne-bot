@@ -1,0 +1,163 @@
+{
+    "description": "Marianne (pronounced mah-rih-anne) is a discord bot mainly used for server management and simple automation.",
+    "prefix": "i/",
+    "commandeAideUtilisation": "The help command allows you to search information about specific commands or modules.\nCalling the help command with no arguments will return a list of all modules.\nCalling the help command with the name of a module will return the name of all commands in that module.\nCalling the help command with the name of a module and the name of a command will return information about the command.\nFor more help or info you can join this discord server: https://discord.gg/fsW94cN",
+    "modules": {
+        "Util": {
+            "nomModule": "Utilities",
+            "descriptionModule": "Contains utility commands (I really don't know how to explain this one)",
+            "commandes": {
+                "rng": {
+                    "description": "Returns a random number between two values.",
+                    "utilisation": "m/rng 1 10",
+                    "arguments": {
+                        "lowerLimit": "Lowest random number that can be chosen.",
+                        "higherLimit": "Highest random number that can be chosen."
+                    }
+                },
+                "help": {
+                    "description": "Used to get information on the various commands available.",
+                    "utilisation": "m/help Utilities help",
+                    "arguments": {
+                        "module": "Otional. The name of the module to look for.",
+                        "commande": "Optional. The name of the specific command to look for."
+                    }
+                }
+            }
+        },
+        "Dev": {
+            "nomModule": "Development",
+            "descriptionModule": "Contains commands used for testing/development. Commands in this section are hidden and can only be used by the bot owner.",
+            "commandes": {}
+        },
+        "Moderation": {
+            "nomModule": "Moderation",
+            "descriptionModule": "Contains commands to help with general server moderation tasks.",
+            "commandes": {
+                "clear": {
+                    "description": "Delete a certain amount of messages from the current channel. Requires permission to manage messages.",
+                    "utilisation": "m/clear 24",
+                    "arguments": {
+                        "numberOfMessages": "Optional. How many messages to delete. Defaults to 5. Max 99."
+                    }
+                }
+            }
+        },
+        "Marianne": {
+            "nomModule": "Marianne",
+            "descriptionModule": "Contains commands to interact with Marianne on a more direct level.",
+            "commandes": {
+                "join": {
+                    "description": "Will let Marianne join your current voice channel.",
+                    "utilisation": "m/join",
+                    "arguments": {}
+                },
+                "ping": {
+                    "description": "This command is used to test Marianne's ability to respond to your messages.",
+                    "utilisation": "m/ping",
+                    "arguments": {}
+                },
+                "leave": {
+                    "description": "Marianne will leave the voice channel she's in.",
+                    "utilisation": "m/leave",
+                    "arguments": {}
+                }
+            }
+        },
+        "Tag": {
+            "nomModule": "Tag",
+            "descriptionModule": "This module contains commands to save pieces of text under a specific keyword (tags). User can see and summon their own tags, but not the ones of others.",
+            "commandes": {
+                "tag": {
+                    "description": "Command group. Contains several subcommands.",
+                    "utilisation": "Cannot be used by itself.",
+                    "arguments": {}
+                },
+                "tag set": {
+                    "description": "Allows you to link a keyword to a text.",
+                    "utilisation": "m/tag set joke this is a really funny joke hahaha",
+                    "arguments": {
+                        "tagName": "The name under which you want to save the tag.",
+                        "text": "The text you want to save."
+                    }
+                },
+                "tag get": {
+                    "description": "Allows you to show the text of a previously saved tag.",
+                    "utilisation": "m/tag get joke",
+                    "arguments": {
+                        "tagName": "The name of the tag you previously saved."
+                    }
+                },
+                "tag mytags": {
+                    "description": "Get a list of all your registered tags.",
+                    "utilisation": "m/tag mytags",
+                    "arguments": {}
+                },
+                "tag delete": {
+                    "description": "Allows you to delete a previously registered tag.",
+                    "utilisation": "m/tag delete joke",
+                    "arguments": {
+                        "tagName": "The name of the tag to be deleted."
+                    }
+                }
+            }
+        },
+        "Enregistrement": {
+            "nomModule": "Register",
+            "descriptionModule": "Contains several commands to save user data.",
+            "commandes": {
+                "register": {
+                    "description": "Contains several sucommands.",
+                    "utilisation": "Cannot be used by itself.",
+                    "arguments": {}
+                },
+                "register discord": {
+                    "description": "Allows Marianne to register your discord profile. This is necessary for all other profile linking.",
+                    "utilisation": "m/register discord",
+                    "arguments": {}
+                },
+                "register steam": {
+                    "description": "Allows you to link your discord and steam profile.",
+                    "utilisation": "m/register steam, m/register steam abcdefghij",
+                    "arguments": {
+                        "autheticationCode": "Optional. This is the code you will get after you login to steam."
+                    }
+                },
+                "whoami": {
+                    "description": "This command will return information about your linked profiles.",
+                    "utilisation": "m/whoami",
+                    "arguments": {}
+                }
+            }
+        },
+        "Steam": {
+            "nomModule": "Steam",
+            "descriptionModule": "Contains commands to interact with steam. Some commands will require that you've registered your steam profile (see: register steam).",
+            "commandes": {
+                "steam": {
+                    "description": "Command group. Contains several subcommands.",
+                    "utilisation": "Cannot be used by itself.",
+                    "arguments": {}
+                },
+                "steam joinme": {
+                    "description": "Returns a string formated as a Destiny 2 /join code: '/join [steamID]'",
+                    "utilisation": "m/steam joinme",
+                    "arguments": {}
+                }
+            }
+        },
+        "Destiny": {
+            "nomModule": "Destiny",
+            "descriptionModule": "Contains commands relating to Destiny 2",
+            "commandes": {
+                "resources": {
+                    "description": "Returns a link to the Sherpa Run google drive resource folder.",
+                    "utilisation": "m/resource lw",
+                    "arguments": {
+                        "[arg]": "Optional. A keyword for a specific folder."
+                    }
+                }
+            }
+        }
+    }
+}

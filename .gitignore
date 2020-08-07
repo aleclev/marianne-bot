@@ -1,0 +1,9 @@
+.idea
+.vscode
+__pycache__
+/ffmpeg
+/Documentation/*.backup
+/Documentation/logs
+/db
+/Testeurs
+/config.json
