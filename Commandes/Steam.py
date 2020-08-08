@@ -27,18 +27,21 @@ class Steam(commands.Cog):
             ctx: Le contexte de la commande.
         """
         with self.connectionBD.cursor(cursors.Cursor) as cur:
-            requete = "SELECT U.steam_id FROM utilisateur U WHERE U.discord_id=%s;"
+            requete = "SELECT steam_id FROM utilisateur WHERE discord_id=%s;"
             cur.execute(requete, ctx.message.author.id)
 
-            #Fetchone retourne un tuple.
-            steamID = cur.fetchone()[0]
+            #On doit confirmer le résultat avant de prendre le steamID
+            #Resultat devient None si le tuple n'existe pas. (None,) si le tuple existe mais steam_id est NULL.
+            resultat = cur.fetchone()
 
-            #L'utilisateur n'est pas enregistré. On envoi un message d'erreur.
-            if steamID is None:
+            if resultat == None or resultat == (None,):
                 return await ctx.send("You need to register your steam profile to use this command. You can do that through the **m/register steam** command.")
-            
+
             #L'utilisateur est enregistré, on retourne le message formatté.
             else:
+                #steamID est dans un tuple.
+                steamID = resultat[0]
+
                 #Ouverture d'une session pour faire des requêtes.
                 async with aiohttp.ClientSession() as session:
                     #Requête du nom steam de la personne.   
@@ -48,9 +51,14 @@ class Steam(commands.Cog):
                             
                             try:
                                 nomSteam = resJson["response"]["players"][0]["personaname"]
+                            
+                            #Attrape un exception où la réponse de steam est mal formatée
                             except KeyError:
                                 nomSteam = "ERROR IN FETCHING STEAM NAME"
 
+                            #Attrape un exception où players ne contient rien (Le steamID est invalide)
+                            except IndexError:
+                                nomSteam = "ERROR IN FETCHING STEAM NAME"
                         else:
                             nomSteam = "ERROR IN FETCHING STEAM NAME"
                         
