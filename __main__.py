@@ -31,7 +31,7 @@ def main():
                              user=config["bd_nom_utilisateur"],
                              password=config["bd_mot_passe"],
                              db=config["bd_nom"],
-                             charset='utf8',
+                             charset='utf8mb4',
                              autocommit=True,
                              cursorclass=pymysql.cursors.DictCursor)
     
