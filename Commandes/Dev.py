@@ -9,7 +9,7 @@ import random
 import json
 import datetime
 import time
-from discord.ext import commands
+from discord.ext import commands, tasks
 from Classes import MarianneException as MarianneException
 
 class Dev(commands.Cog):
@@ -17,7 +17,7 @@ class Dev(commands.Cog):
     Engrenage pour développement. 
     Contient des commandes et des fonctions de tests.
     """
-    def __init__(self, client, config, reddit, clientDest):
+    def __init__(self, client, config, reddit, clientDest, connectionBD):
         """
         Initialisation. On passe le client et le fichier config.
         """
@@ -25,6 +25,7 @@ class Dev(commands.Cog):
         self.config = config
         self.reddit = reddit
         self.clientDest = clientDest
+        self.connectionBD = connectionBD
 
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -234,6 +235,55 @@ class Dev(commands.Cog):
         message += "```"
         print(message)
         return await ctx.send(message)
+    
+    @commands.command(hidde=True)
+    @commands.is_owner()
+    async def reinit_bd_conn(self, ctx):
+        """Ferme puis réouvre la connexion mysql.
+
+        Args:
+            ctx: Le contexte de la commande.
+
+        Returns:
+            Message de réussite.
+        """
+        tempsDebut = time.time()
+        self.connectionBD.close()
+        self.connectionBD.ping(reconnect=True)
+        tempsFin = time.time()
+        return await ctx.send(f"Connexion réinitialiser en {tempsFin - tempsDebut}!")
+    
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def fermer_bd_conn(self, ctx):
+        """Ferme la connexion mysql.
+
+        Args:
+            ctx: Contexte de la commande.
+
+        Returns:
+            Message de réussite.
+        """
+        tempsDebut = time.time()
+        self.connectionBD.close()
+        tempsFin = time.time()
+        return await ctx.send(f"Connexion fermer en {tempsFin - tempsDebut}!")
+    
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def ouvrir_bd_conn(self, ctx):
+        """Ouvre la connexion mysql (si fermée)
+
+        Args:
+            ctx: Contexte de la commande.
+
+        Returns:
+            Message de réussite.
+        """
+        tempsDebut = time.time()
+        self.connectionBD.ping(reconnect=True)
+        tempsFin = time.time()
+        return await ctx.send(f"Connexion réouverte en {tempsFin - tempsDebut}!")
 
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""

@@ -1,9 +1,22 @@
 import asyncio
 import discord
 
-
 async def demanderEntree(ctx: discord.ext.commands.Context, client: discord.Client, verification=None, messageEnvoye="An input is required...", 
                                     timeout=60, supprimerMessagesBot=True, supprimerMessageUtilisateur=True) -> str:
+    """Meta fonction pour demander à un utilisateur Discord une entrée dans un salon.
+
+    Args:
+        ctx (discord.ext.commands.Context): Contexte de la commande.
+        client (discord.Client): Le client discord courant.
+        verification (Fonction, optional): Fonction de vérification pour savoir quels messages écouter. Defaults to None.
+        messageEnvoye (str, optional): Message à envoyer avant de demander l'entrée. Defaults to "An input is required...".
+        timeout (int, optional): Nombre de secondes avant que la demande soit annulée. Defaults to 60.
+        supprimerMessagesBot (bool, optional): Si le message du bot devrait être supprimé. Defaults to True.
+        supprimerMessageUtilisateur (bool, optional): Si le message . Defaults to True.
+
+    Returns:
+        str: [description]
+    """
     #Définition de la fonction de vérification si besoin.
     if verification is None:
         #Fonction de base, vérifie que le message provient du même canale et de la même personne.
