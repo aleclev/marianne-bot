@@ -10,7 +10,7 @@ import requests
 import pydest
 from praw import Reddit
 from Commandes import Util, Dev, Tag, Steam, Moderation, Marianne, Tag, Enregistrement, Destiny #Permet d'enlever une erreur avec le linting.
-from Fonctions import BaseDonnes
+from Fonctions import BaseDonnes, Message
 
 #TODO: Écrire un script pour transfèrer tous les données des tags enregistrés auparavant.
 #TODO: Remplacer les notifs pour le formulaire d'application au clan.
@@ -46,6 +46,7 @@ def main():
     client = commands.Bot(command_prefix=config["prefix"], help_command=None)
 
     #Ajout des cogs du client
+    #Cogs de commandes
     client.add_cog(Util.Util(client, config=config))
     client.add_cog(Dev.Dev(client, config=config, reddit=reddit, clientDest=clientDest, connectionBD=connection_BD))
     client.add_cog(Moderation.Moderation(client))
@@ -54,7 +55,10 @@ def main():
     client.add_cog(Enregistrement.Enregistrement(client, connectionBD=connection_BD, config=config))
     client.add_cog(Steam.Steam(client, config=config, connectionBD=connection_BD, sessionReq=sessionReq, clientDest=clientDest))
     client.add_cog(Destiny.Destiny(client))
+    
+    #Cogs de Fonctions
     client.add_cog(BaseDonnes.BaseDonnes(connectionBD=connection_BD))
+    client.add_cog(Message.MessagesFonctions(client=client))
 
     #Confirmation du bot en console.
     @client.event

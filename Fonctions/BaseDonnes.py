@@ -13,4 +13,3 @@ class BaseDonnes(commands.Cog):
         """
         self.connectionBD.close()
         self.connectionBD.ping(reconnect=True)
-        print(f"Connexion réinitialiser à {datetime.datetime.now()}")

@@ -1,5 +1,23 @@
 import asyncio
 import discord
+from discord.ext import commands
+
+class MessagesFonctions(commands.Cog):
+    def __init__(self, client):
+        self.client = client
+    
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        """Envoi un avertissement si le message supprimé contient une mention global.
+
+        Args:
+            message (Discord.message): Le message supprimé.
+
+        Returns:
+            Un message au besoin.
+        """
+        if message.mention_everyone:
+            return await message.channel.send(f"**DETECTED DELETED MESSAGE WITH EVERYONE/HERE MENTION**\n**Author:** {message.author.mention}\n**Content:** ```{message.content}```\nMany people agree that deleting messages with mentions in them is not boss. Be careful.")
 
 async def demanderEntree(ctx: discord.ext.commands.Context, client: discord.Client, verification=None, messageEnvoye="An input is required...", 
                                     timeout=60, supprimerMessagesBot=True, supprimerMessageUtilisateur=True) -> str:
