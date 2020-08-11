@@ -47,7 +47,7 @@ class Tag(commands.Cog):
             if cur.fetchone()[0] == 0:
                 requete = "INSERT INTO tag VALUES (%s, %s, %s);"
                 cur.execute(requete, (ctx.message.author.id, p_tagNom, p_tagText))
-                return await ctx.send(f"Tag was saved successfully. You can get it again with 'm/tag get {p_tagNom}")
+                return await ctx.send(f"Tag was saved successfully. You can get it again with 'm/tag get {p_tagNom}'.")
             
             #La tag existe. L'utilisateur doît choisir s'il veut écraser l'ancien ou ne rien faire.
             else:
