@@ -30,11 +30,14 @@ async def gestionnaire_erreur(ctx: discord.ext.commands.Context, erreur: discord
                 if isinstance(erreur.original, AttributeError):
                     return await ctx.send("")
                 
+                if isinstance(erreur.original, TypeError):
+                    return await ctx.send("**Exception caught!** This is usually the result of an argument being the wrong type. For instance, typing letters where a number should be.")
+                
                 if isinstance(erreur.original, MarianneException.NonEnregDiscord):
                     return await ctx.send("**Exception caught!** You must be registered with me on Discord to use this command. Simply type: 'm/register discord'.")
                 
                 if isinstance(erreur.original, MarianneException.NonEnregSteam):
-                    return await ctx.send("**Exception caught!** You must be registered with me on Steam to use this command. Simply type: 'm/register discord' and 'm/register steam'.")
+                    return await ctx.send("**Exception caught!** You must be registered with me on Steam to use this command. Use the following commands: 'm/register discord' and 'm/register steam'.")
         
         #Type d'erreurs non gèrées
         else:

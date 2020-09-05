@@ -38,7 +38,7 @@ class Dev(commands.Cog):
     @commands.is_owner()
     async def req_tous_engr(self, ctx):
         """Retourne le nom des engrenages."""
-        return await ctx.send(self.client.get_cog)
+        return await ctx.send(self.client.get_cog())
 
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -137,6 +137,12 @@ class Dev(commands.Cog):
 
         for cogNom in cogDict:
             print(cogNom)
+
+            #Saute l'engrenage s'il est marqué comme caché.
+            if cogDict[cogNom].cache:
+                print(f"Engrenage {cogNom} marqué comme caché.")
+                continue
+
             #On ajoute le nom du cog au besoin
             if cogNom not in docJsonCourante["modules"]:
                 messageModifs += f"Ajout de cog: {cogNom}\n"
@@ -193,6 +199,10 @@ class Dev(commands.Cog):
         cogDict = self.client.cogs
 
         for cogNom in cogDict:
+            #Si l'engrenage est marqué comme caché on saute l'analyse.
+            if cogDict[cogNom].cache:
+                continue
+
             if cogNom not in docJsonCourante["modules"]:
                 listeAvertissement.append(f"Cog manquants: {cogNom}")
                 continue

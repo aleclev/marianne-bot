@@ -5,10 +5,9 @@ certaines données des utilisateurs.
 import discord
 import steam
 import requests
-from Fonctions import Temps
+from Fonctions import Temps, Erreur, Message
 from discord.ext import commands
 from pymysql import cursors
-from Fonctions import Message
 
 class Enregistrement(commands.Cog):
     def __init__(self, client, connectionBD, config):
@@ -83,22 +82,18 @@ class Enregistrement(commands.Cog):
     
     @commands.command()
     async def whoami(self, ctx):
-        with self.connectionBD.cursor(cursor=cursors.Cursor) as cur:
-            requete = "SELECT U.steam_id FROM utilisateur U WHERE U.discord_id=%s;"
+        with self.connectionBD.cursor() as cur:
+            requete = "SELECT * FROM utilisateur U WHERE U.discord_id=%s;"
             cur.execute(requete, ctx.message.author.id)
             res = cur.fetchone()
             if res is None:
-                return await ctx.send("Steam profile is not registered.")
+                return await ctx.send("Your Discord account is not registered.")
             else:
-                steamID = res[0]
-                res = requests.get("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/", params={"key": self.config["cleSteam"], "steamids": steamID})
-                if res.ok:
-                    nomSteam = res.json()["response"]["players"][0]["personaname"]
-                    return await ctx.send(f"steamID: {steamID}\nSteam name: {nomSteam}")
-                else:
-                    return await ctx.send("Request for data was refused by steam.")
+                print(res)
+                return await ctx.send("The following is a list of ids you've registered with me. Ids are public and serve only to identify you.\n"
+                                        f"```Discord profile id: {res['discord_id']}\n"
+                                        f"Steam profile id:      {res['steam_id']}\n```")
 
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""
-        print(error)
-        return await ctx.send("I caught an exception in my program. I wasn't able to do your command. Sorry.")
+        return await Erreur.gestionnaire_erreur(ctx, error)

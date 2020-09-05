@@ -55,10 +55,21 @@ def main():
     client.add_cog(Enregistrement.Enregistrement(client, connectionBD=connection_BD, config=config))
     client.add_cog(Steam.Steam(client, config=config, connectionBD=connection_BD, sessionReq=sessionReq, clientDest=clientDest))
     client.add_cog(Destiny.Destiny(client))
+
+    #Marque tous les engrenages de cette section comme non cachés. (Utile dans les commandes de documentations)
+    listeEngr = client.cogs
+    for cogNom in listeEngr:
+        listeEngr[cogNom].cache = False
     
     #Cogs de Fonctions
     client.add_cog(BaseDonnes.BaseDonnes(connectionBD=connection_BD))
     client.add_cog(Message.MessagesFonctions(client=client))
+
+    #Marque tous les engrenages de cette section comme cachés. (Utile dans les commandes de documentations)
+    listeEngr = client.cogs
+    for cogNom in listeEngr:
+        if not hasattr(listeEngr[cogNom], "cache"): 
+            listeEngr[cogNom].cache = True
 
     #Confirmation du bot en console.
     @client.event
