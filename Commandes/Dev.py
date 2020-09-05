@@ -11,6 +11,7 @@ import datetime
 import time
 from discord.ext import commands, tasks
 from Classes import MarianneException as MarianneException
+from Fonctions import Erreur
 
 class Dev(commands.Cog):
     """
@@ -284,8 +285,25 @@ class Dev(commands.Cog):
         self.connectionBD.ping(reconnect=True)
         tempsFin = time.time()
         return await ctx.send(f"Connexion réouverte en {tempsFin - tempsDebut}!")
+    
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def cogDict(self, ctx):
+        """Imprime l'engrenage courant en dictionnaire.
+
+        Args:
+            ctx: Le contexte de la commande.
+
+        Returns:
+            Imprime...
+        """
+        return print(self.__dict__)
+
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def lever_attributeError(self, ctx):
+        raise AttributeError
 
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""
-        print(error)
-        return await ctx.send("Une exception a été lancée dans l'engrenage de développement.")
+        return await Erreur.gestionnaire_erreur(ctx, error)

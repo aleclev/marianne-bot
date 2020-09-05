@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from gtts import gTTS
+from Fonctions import Erreur
 
 class Marianne(commands.Cog):
     def __init__(self, client):
@@ -16,7 +17,7 @@ class Marianne(commands.Cog):
             return await ctx.send("You have to be in a voice channel for me to join you.")
         
         #Connection au salon.
-        await salon.connect()
+        return await salon.connect()
 
     #@commands.command()
     #async def say(self, ctx, *, message):
@@ -41,9 +42,13 @@ class Marianne(commands.Cog):
             ctx: Contexte de la commande.
 
         Returns:
-            Marianne doit retourner Pong! dans le canal du contexte de la commande.
+            Marianne doit retourner Pong!/Ping! dans le salon du contexte de la commande.
         """
         return await ctx.send("Pong!")
+    
+    @commands.command()
+    async def pong(self, ctx):
+        return await ctx.send("Ping!")
 
     @commands.command()
     async def leave(self, ctx):
@@ -64,5 +69,4 @@ class Marianne(commands.Cog):
 
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""
-        print(error)
-        return await ctx.send("I caught an exception in my program. I wasn't able to do your command. Sorry.")
+        return await Erreur.gestionnaire_erreur(ctx, error)

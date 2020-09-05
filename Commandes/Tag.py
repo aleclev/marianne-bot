@@ -9,7 +9,7 @@ import pymysql
 import asyncio
 from pymysql import cursors
 from Classes import MarianneException
-from Fonctions import Message
+from Fonctions import Message, Erreur
 
 class Tag(commands.Cog):
     def __init__(self, client, connectionBD):
@@ -22,7 +22,16 @@ class Tag(commands.Cog):
         permet à l'utilisateur de définir un mot clé avec
         un certain texte. Le texte peut être récupéré avec
         le mot clé."""
-        return
+
+        #Vérification que l'utilisateur existe dans la base de données.
+        with self.connectionBD.cursor(cursors.Cursor) as cur:
+            requete = "SELECT (EXISTS (SELECT * FROM utilisateur WHERE utilisateur.discord_id=%s));"
+            cur.execute(requete, ctx.message.author.id)
+
+            if cur.fetchone()[0] == 0:
+                raise MarianneException.NonEnregDiscord
+            else:
+                pass
 
     @tag.command()
     async def set(self, ctx, p_tagNom: str = "", *, p_tagText: str = ""):
@@ -143,4 +152,4 @@ class Tag(commands.Cog):
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""
         print(error)
-        return await ctx.send("I caught an exception in my program. I wasn't able to do your command. Sorry.")
+        await Erreur.gestionnaire_erreur(ctx, error)

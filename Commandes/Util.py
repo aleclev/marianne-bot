@@ -1,5 +1,7 @@
 import random
 import json
+import discord
+from Fonctions import Erreur
 from discord.ext import commands
 
 class Util(commands.Cog):
@@ -77,3 +79,11 @@ class Util(commands.Cog):
             Retourne le nombre aléatoire dans le contexte.
         """
         return await ctx.send(f"How about **{random.randint(limiteBas, limiteHaut+1)}**?")
+    
+    @commands.command()
+    async def emoji_search(self, ctx, emoji: discord.Emoji):
+        return await ctx.send(emoji.url)
+
+    async def cog_command_error(self, ctx, error):
+        """Gère tous les exceptions non-attrapées."""
+        return await Erreur.gestionnaire_erreur(ctx, error)

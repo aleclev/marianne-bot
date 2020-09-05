@@ -22,13 +22,26 @@
                         "module": "Otional. The name of the module to look for.",
                         "commande": "Optional. The name of the specific command to look for."
                     }
+                },
+                "emoji_search": {
+                    "description": "Allows you to searc",
+                    "utilisation": "",
+                    "arguments": {
+                        "<emoji>": ""
+                    }
                 }
             }
         },
         "Dev": {
             "nomModule": "Development",
             "descriptionModule": "Contains commands used for testing/development. Commands in this section are hidden and can only be used by the bot owner.",
-            "commandes": {}
+            "commandes": {
+                "reinit_bd_conn": {
+                    "description": "",
+                    "utilisation": "",
+                    "arguments": {}
+                }
+            }
         },
         "Moderation": {
             "nomModule": "Moderation",

@@ -3,6 +3,7 @@ Contient l'implémantation des commandes de Destiny.
 """
 
 import discord
+from Fonctions import Erreur
 from discord.ext import commands
 
 class Destiny(commands.Cog):
@@ -26,4 +27,6 @@ class Destiny(commands.Cog):
         else:
             return await ctx.send(f"{arg} doesn't correspond to any of my registered arguments for this command, here's the **Destiny 2 Resources Foler:** https://drive.google.com/open?id=1HbTh5gHBKPH1EZC9bYi9HFQBGzJcHbfZ")
 
-        
+    async def cog_command_error(self, ctx, error):
+        """Gère tous les exceptions non-attrapées."""
+        return await Erreur.gestionnaire_erreur(ctx, error)

@@ -2,6 +2,7 @@ import discord
 import requests
 import aiohttp
 from pymysql import cursors
+from Fonctions import Erreur
 from discord.ext import commands
 
 class Steam(commands.Cog):
@@ -173,5 +174,4 @@ class Steam(commands.Cog):
 
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""
-        print(error)
-        return await ctx.send("I caught an exception in my program. I wasn't able to do your command. Sorry.")
+        return await Erreur.gestionnaire_erreur(ctx, error)
