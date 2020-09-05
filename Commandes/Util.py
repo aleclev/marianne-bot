@@ -78,7 +78,7 @@ class Util(commands.Cog):
         Returns:
             Retourne le nombre aléatoire dans le contexte.
         """
-        return await ctx.send(f"How about **{random.randint(limiteBas, limiteHaut+1)}**?")
+        return await ctx.send(f"How about **{random.randint(limiteBas, limiteHaut)}**?")
     
     @commands.command()
     async def emoji_search(self, ctx, emoji: discord.Emoji):
