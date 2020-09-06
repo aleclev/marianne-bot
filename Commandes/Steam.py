@@ -1,6 +1,7 @@
 import discord
 import requests
 import aiohttp
+from Classes import MarianneException
 from pymysql import cursors
 from Fonctions import Erreur
 from discord.ext import commands
@@ -36,7 +37,7 @@ class Steam(commands.Cog):
             resultat = cur.fetchone()
 
             if resultat == None or resultat == (None,):
-                return await ctx.send("You need to register your steam profile to use this command. You can do that through the **m/register steam** command.")
+                raise MarianneException.NonEnregSteam
 
             #L'utilisateur est enregistré, on retourne le message formatté.
             else:

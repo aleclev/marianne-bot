@@ -24,10 +24,17 @@
                     }
                 },
                 "emoji_search": {
-                    "description": "Allows you to searc",
-                    "utilisation": "",
+                    "description": "Allows you to search an emoji by name, id or the emoji directly. Command raises an exception if an emoji is not found.",
+                    "utilisation": "m/emoji_search Flooshed",
                     "arguments": {
-                        "<emoji>": ""
+                        "<emoji>": "The emoji to be searched."
+                    }
+                },
+                "react_above": {
+                    "description": "Adds a reaction to the latest message in the channel. THIS COMMAND DOES NOT RETURN ERROR MESSAGES.",
+                    "utilisation": "m/react_above Flooshed, m/ra Flooshed",
+                    "arguments": {
+                        "<emoji>": "The emoji to be added to the message. Works with animated emojis."
                     }
                 }
             }

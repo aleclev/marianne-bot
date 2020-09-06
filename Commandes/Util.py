@@ -85,7 +85,7 @@ class Util(commands.Cog):
         return await ctx.send(emoji.url)
 
     #TODO: Implémantation de cette commande.
-    @commands.command(hidden=True)
+    @commands.command(aliases=["ra"])
     async def react_above(self, ctx, emoji: discord.Emoji):
         """Permet de réagir au dernier message du salon.
 
@@ -93,7 +93,10 @@ class Util(commands.Cog):
             ctx: Contexte de la commande.
             emoji (discord.Emoji): L'emoji à utiliser.
         """
-        return
+        async for message in ctx.message.channel.history(limit=2):
+            dernierMessage = message
+        await dernierMessage.add_reaction(emoji)
+        return await ctx.message.channel.delete_messages([ctx.message])
 
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""
