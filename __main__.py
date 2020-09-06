@@ -3,6 +3,7 @@ Fichier principal de Marianne.
 Marianne est une intégration pour Discord.
 """
 
+import discord
 from discord.ext import commands, tasks
 import json
 import pymysql
@@ -74,6 +75,8 @@ def main():
     #Confirmation du bot en console.
     @client.event
     async def on_ready():
+        #Changement du statut
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="https://discord.gg/fsW94cN for help, demos, news and bug reports."))
         print(f"{config['nom']} est en ligne!")
 
     #Éxcecute le client discord

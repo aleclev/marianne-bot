@@ -84,6 +84,17 @@ class Util(commands.Cog):
     async def emoji_search(self, ctx, emoji: discord.Emoji):
         return await ctx.send(emoji.url)
 
+    #TODO: Implémantation de cette commande.
+    @commands.command(hidden=True)
+    async def react_above(self, ctx, emoji: discord.Emoji):
+        """Permet de réagir au dernier message du salon.
+
+        Args:
+            ctx: Contexte de la commande.
+            emoji (discord.Emoji): L'emoji à utiliser.
+        """
+        return
+
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""
         return await Erreur.gestionnaire_erreur(ctx, error)

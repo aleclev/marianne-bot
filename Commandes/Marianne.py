@@ -46,7 +46,7 @@ class Marianne(commands.Cog):
         """
         return await ctx.send("Pong!")
     
-    @commands.command()
+    @commands.command(hidden=True)
     async def pong(self, ctx):
         return await ctx.send("Ping!")
 

@@ -74,11 +74,6 @@
                     "description": "Marianne will leave the voice channel she's in.",
                     "utilisation": "m/leave",
                     "arguments": {}
-                },
-                "pong": {
-                    "description": "",
-                    "utilisation": "",
-                    "arguments": {}
                 }
             }
         },
