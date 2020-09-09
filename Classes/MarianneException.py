@@ -12,6 +12,11 @@ class NonEnregDiscord(Exception):
     def __init__(self):
         pass
 
+class MauvaiseEntree(Exception):
+    """Erreur associée à une entrée invalide."""
+    def __init__(self):
+        pass
+
 class MarianneException(Exception):
     """"""
     def __init__(self):
