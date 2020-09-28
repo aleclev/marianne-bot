@@ -1,6 +1,6 @@
 import discord
 import random
-from Fonctions import Erreur, Message
+from Fonctions import Erreur, Message, Permissions
 from Classes import MarianneException
 from discord.ext import commands
 
@@ -16,11 +16,13 @@ class Role(commands.Cog):
         Args:
             ctx: Le contexte de la commande.
         """
-        return
+        if not ctx.guild.me.guild_permissions.administrator:
+            raise MarianneException.PermissionsDiscordManquante("Administrator")
     
+    #TODO: Empêcher de modifier un rôle plus haut que le top_role du client
     @role.command()
     @commands.has_permissions(administrator=True)
-    async def remove_from_all(self, ctx, role: discord.Role):
+    async def remove_from_all(self, ctx, *, role: discord.Role):
         """Retire un rôle de tous les utilisateurs du serveur.
 
         Args:
@@ -34,7 +36,11 @@ class Role(commands.Cog):
         codeAuth = "".join([str(elem) for elem in random.choices([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], k=3)])
         
         #Affiche un message d'avertissement à l'utilisateur.
-        messageAvert = (f"**WARNING**\nYou are about to **remove** the following role from **every member** of this server:\nRole Name: {role.name}\nRole ID: {role.id}\n**THIS ACTION IS IRREVERSIBLE**\n" +
+        messageAvert = (f"**WARNING**\n" +
+        f"You are about to **remove** the following role from **every member** of this server:\n" +
+        f"Role Name: {role.name}\n" +
+        f"Role ID: {role.id}\n" +
+        f"**THIS ACTION IS IRREVERSIBLE**\n" +
         f"\nTo execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
         
         #Demande à l'utilisateur de confirmer la commande.
@@ -47,7 +53,7 @@ class Role(commands.Cog):
             #On enlève les roles
             await ctx.send("Authorisation code accepted. Beginning task...")
 
-            for membre in ctx.guild.members:
+            for membre in role.members:
                 await membre.remove_roles(role)
             
             #Fin de la tâche
@@ -55,7 +61,7 @@ class Role(commands.Cog):
     
     @role.command()
     @commands.has_permissions(administrator=True)
-    async def give_to_all(self, ctx, role: discord.Role):
+    async def give_to_all(self, ctx, *, role: discord.Role):
         """Permet de donner un rôle à tous les membres du serveur.
 
         Args:
@@ -68,8 +74,12 @@ class Role(commands.Cog):
         #Génération du code d'authorisation.
         codeAuth = "".join([str(elem) for elem in random.choices([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], k=3)])
         
-        messageAvert = (f"**WARNING**\nYou are about to **give** the following role to **every member** of the server:\nRole Name: {role.name}\nRole ID: {role.id}" +
-        f"**THIS ACTION IS IRREVERSIBLE**\nTo execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
+        messageAvert = (f"**WARNING**\n" +
+        f"You are about to **give** the following role to **every member** of the server:\n" +
+        f"Role Name: {role.name}\n" +
+        f"Role ID: {role.id}" +
+        f"**THIS ACTION IS IRREVERSIBLE**\n" +
+        f"To execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
 
         #Demande à l'utilisateur de confirmer la commande.
         res = await Message.demanderEntree(ctx, self.client, None, messageAvert, 60, False, False)
@@ -118,8 +128,10 @@ class Role(commands.Cog):
         #Génération du code d'authorisation + message avertissement.
         codeAuth = "".join([str(elem) for elem in random.choices([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], k=3)])
         
-        messageAvert = (f"**WARNING**\nEvery member with the role **{roleComp.name}** (id={roleComp.id}) will be **given** the role **{roleCible.name}** (id={roleCible.id}).\n" +
-        f"**THIS ACTION IS IRREVERSIBLE**\nTo execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
+        messageAvert = (f"**WARNING**\n" +
+        f"Every member with the role **{roleComp.name}** (id={roleComp.id}) will be **given** the role **{roleCible.name}** (id={roleCible.id}).\n" +
+        f"**THIS ACTION IS IRREVERSIBLE**\n" +
+        f"To execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
         
         #Demande à l'utilisateur de confirmer la commande.
         res = await Message.demanderEntree(ctx, self.client, None, messageAvert, 60, False, False)
@@ -156,8 +168,10 @@ class Role(commands.Cog):
         #Génération du code d'authorisation + message avertissement.
         codeAuth = "".join([str(elem) for elem in random.choices([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], k=3)])
         
-        messageAvert = (f"**WARNING**\nEvery member with the role **{roleComp.name}** (id={roleComp.id}) will be **removed** from the role **{roleCible.name}** (id={roleCible.id}).\n" +
-        f"**THIS ACTION IS IRREVERSIBLE**\nTo execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
+        messageAvert = (f"**WARNING**\n" +
+        f"Every member with the role **{roleComp.name}** (id={roleComp.id}) will be **removed** from the role **{roleCible.name}** (id={roleCible.id}).\n" +
+        f"**THIS ACTION IS IRREVERSIBLE**\n" +
+        f"To execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
 
         #Demande à l'utilisateur de confirmer la commande.
         res = await Message.demanderEntree(ctx, self.client, None, messageAvert, 60, False, False)
@@ -171,6 +185,147 @@ class Role(commands.Cog):
             for membre in roleComp.members:
                 await membre.remove_roles(roleCible)
 
+            return await ctx.send("Task finished.")
+    
+    @role.command()
+    @commands.has_permissions(administrator=True)
+    async def update_permissions_of_all(self, ctx, permValeur: int):
+        """Change les permissions de tous les rôles à permValeur.
+
+        Args:
+            ctx ([type]): [description]
+            permValeur (int): Valeur des permissions à soustraire.
+            role (discord.Role): Rôle à modifier.
+        """
+        #Génération du code d'authorisation + message avertissement.
+        codeAuth = "".join([str(elem) for elem in random.choices([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], k=3)])
+
+        #La liste des rôles au dessus du rôle à modifier (incluant le rôle à modifier)
+        maxRole = ctx.guild.me.top_role
+        listeRolesInaccessibles = [maxRole]
+
+        #Ce message est affiché à l'utilisateur pour lister les rôles qui ne pourronts pas être modifiés.
+        listeRolesInaccessiblesMessage = f"{maxRole.name} ({maxRole.id})\n"
+
+        #Analyse des rôles qui ne pourront pas être modifiés.
+        for role in ctx.guild.roles:
+            if role.position > maxRole.position:
+                listeRolesInaccessiblesMessage += f"{role.name} ({role.id})\n"
+                listeRolesInaccessibles.append(role)
+        
+        messageAvert = (f"**WARNING**\n" +
+        f"The permission value of every role will be set to: {permValeur}\n" +
+        f"**THE FOLLOWING ROLES WILL NOT BE AFFECTED:**\n" +
+        f"```{listeRolesInaccessiblesMessage}```\n" +
+        f"**THIS ACTION CANNOT BE REVERSED**\n" +
+        f"To execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
+        
+        #Demande à l'utilisateur de confirmer la commande.
+        res = await Message.demanderEntree(ctx, self.client, None, messageAvert, 60, False, False)
+
+        if res != codeAuth:
+            raise MarianneException.MauvaiseEntree()
+        else:
+            #Traitement de la commande.
+            await ctx.send("Authorisation code accepted. Beginning task...")
+
+            #Changement des permissions.
+            for role in ctx.guild.roles:
+                if role not in listeRolesInaccessibles:
+                    await role.edit(permissions=discord.Permissions(permissions=permValeur))
+            return await ctx.send("Task finished.")
+    
+    @role.command(hidden=True)
+    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
+    async def remove_permissions_from_all(self, ctx, permValeur: int):
+        """Soustrait les permissions de valeurPerm de tous les rôles.
+
+        Args:
+            ctx ([type]): [description]
+            permValeur (int): Valeur des permissions à soustraire.
+            role (discord.Role): Rôle à modifier.
+        """
+        #Génération du code d'authorisation + message avertissement.
+        codeAuth = "".join([str(elem) for elem in random.choices([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], k=3)])
+
+        #La liste des rôles au dessus du rôle à modifier (incluant le rôle à modifier)
+        maxRole = ctx.guild.me.top_role
+        listeRolesInaccessibles = [maxRole]
+
+        #Ce message est affiché à l'utilisateur pour lister les rôles qui ne pourronts pas être modifiés.
+        listeRolesInaccessiblesMessage = f"{maxRole.name} ({maxRole.id})\n"
+
+        #Analyse des rôles qui ne pourront pas être modifiés.
+        for role in ctx.guild.roles:
+            if role.position > maxRole.position:
+                listeRolesInaccessiblesMessage += f"{role.name} ({role.id})\n"
+                listeRolesInaccessibles.append(role)
+        
+        messageAvert = (f"**WARNING**\n Every role will lose the permissions associated with the following permission value: {permValeur}\n" +
+        f"**THE FOLLOWING ROLES WILL NOT BE AFFECTED:**\n```{listeRolesInaccessiblesMessage}```\n" +
+        f"**THIS ACTION CANNOT BE REVERSED**\nTo execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
+        
+        #Demande à l'utilisateur de confirmer la commande.
+        res = await Message.demanderEntree(ctx, self.client, None, messageAvert, 60, False, False)
+
+        if res != codeAuth:
+            raise MarianneException.MauvaiseEntree()
+        else:
+            #Traitement de la commande.
+            await ctx.send("Authorisation code accepted. Beginning task...")
+
+            #Changement des permissions.
+            for role in ctx.guild.roles:
+                if role not in listeRolesInaccessibles:
+                    rolePermValeur = role.permissions.value
+                    await role.edit(permissions=discord.Permissions(permissions=Permissions.soustraire_permissions(rolePermValeur, permValeur)))
+            return await ctx.send("Task finished.")
+
+    @role.command(hidden=True)
+    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
+    async def give_permissions_to_all(self, ctx, permValeur: int):
+        """Additionne les permissions de valeurPerm de à tous les rôles.
+
+        Args:
+            ctx: Contexte de la commande.
+            permValeur (int): Valeur des permissions à additionner.
+        """
+        #Génération du code d'authorisation + message avertissement.
+        codeAuth = "".join([str(elem) for elem in random.choices([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], k=3)])
+
+        #La liste des rôles au dessus du rôle à modifier (incluant le rôle à modifier)
+        maxRole = ctx.guild.me.top_role
+        listeRolesInaccessibles = [maxRole]
+
+        #Ce message est affiché à l'utilisateur pour lister les rôles qui ne pourronts pas être modifiés.
+        listeRolesInaccessiblesMessage = f"{maxRole.name} ({maxRole.id})\n"
+
+        #Analyse des rôles qui ne pourront pas être modifiés.
+        for role in ctx.guild.roles:
+            if role.position > maxRole.position:
+                listeRolesInaccessiblesMessage += f"{role.name} ({role.id})\n"
+                listeRolesInaccessibles.append(role)
+        
+        messageAvert = (f"**WARNING**\n Every role will be given the permissions associated with the following permission value: {permValeur}\n" +
+        f"**THE FOLLOWING ROLES WILL NOT BE AFFECTED:**\n```{listeRolesInaccessiblesMessage}```\n" +
+        f"**THIS ACTION CANNOT BE REVERSED**\nTo execute this command, please confirm by entering the following authorisation code: **{codeAuth}**")
+        
+        #Demande à l'utilisateur de confirmer la commande.
+        res = await Message.demanderEntree(ctx, self.client, None, messageAvert, 60, False, False)
+
+        if res != codeAuth:
+            raise MarianneException.MauvaiseEntree()
+        else:
+            #Traitement de la commande.
+            await ctx.send("Authorisation code accepted. Beginning task...")
+
+            #Changement des permissions.
+            for role in ctx.guild.roles:
+                if role not in listeRolesInaccessibles:
+                    rolePermValeur = role.permissions.value
+                    await role.edit(permissions=discord.Permissions(permissions=Permissions.additioner_permissions(rolePermValeur, permValeur)))
             return await ctx.send("Task finished.")
 
     async def cog_command_error(self, ctx, error):

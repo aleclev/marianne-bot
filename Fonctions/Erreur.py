@@ -54,6 +54,12 @@ async def gestionnaire_erreur(ctx: discord.ext.commands.Context, erreur: discord
             
             if isinstance(erreur.original, MarianneException.NonEnregSteam):
                 return await ctx.send("**Exception caught!** You must be registered with me on Steam to use this command. Use the following commands: 'm/register discord' and 'm/register steam'.")
+            
+            if isinstance(erreur.original, MarianneException.MauvaiseEntree):
+                return await ctx.send("**Exception caught!** Bad entry.")
+            
+            if isinstance(erreur.original, MarianneException.PermissionsDiscordManquante):
+                return await ctx.send(f"**Exception Caught**! I need the following permission(s) for this command: {erreur.original.permission}.")
         
         #Type d'erreurs non gèrées
         return await ctx.send(f"**Exception caught!** This exception is not handled. Please report it to the help server. ```{serveurAideURL}```")

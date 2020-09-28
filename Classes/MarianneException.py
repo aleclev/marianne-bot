@@ -17,6 +17,10 @@ class MauvaiseEntree(Exception):
     def __init__(self):
         pass
 
+class PermissionsDiscordManquante(Exception):
+    def __init__(self, permission: str = 'Unspecified Permission'):
+        self.permission = permission
+
 class MarianneException(Exception):
     """"""
     def __init__(self):

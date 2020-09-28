@@ -176,6 +176,68 @@
                     "arguments": {
                         "[arg]": "Optional. A keyword for a specific folder."
                     }
+                },
+                "weapon_info": {
+                    "description": "",
+                    "utilisation": "",
+                    "arguments": {
+                        "<nomArme>": ""
+                    }
+                }
+            }
+        },
+        "Role": {
+            "nomModule": "Role",
+            "descriptionModule": "Contains commands to manage many roles at once.",
+            "commandes": {
+                "role": {
+                    "description": "Contains several sucommands.",
+                    "utilisation": "m/role",
+                    "arguments": {}
+                },
+                "role remove_from_all": {
+                    "description": "Removes the chosen role from every member on the server.",
+                    "utilisation": "m/role remove_from_all MyUncoolRole\nm/role remove_from_all @MyUncoolRole",
+                    "arguments": {
+                        "role": "The role to be removed from all members."
+                    }
+                },
+                "role give_to_all": {
+                    "description": "Gives the chosen role to every member on the server.",
+                    "utilisation": "m/role give_to_all MyCoolRole\nm/role give_to_all @MyCoolRole",
+                    "arguments": {
+                        "role": "The role to be added to all members."
+                    }
+                },
+                "role get_count": {
+                    "description": "Returns the number of members that have a certain role.",
+                    "utilisation": "m/role get_count MyCoolRole",
+                    "arguments": {
+                        "role": "The role you're trying to get the count of."
+                    }
+                },
+                "role give_to_all_with_role": {
+                    "description": "Every member that has roleA will be given roleB (users with that already have roleB will not be affected).",
+                    "utilisation": "m/role give_to_all_with_role MyCoolRole MyOtherCoolRole",
+                    "arguments": {
+                        "roleA": "The role the member must already have.",
+                        "roleB": "The role the member will be given if he has roleA."
+                    }
+                },
+                "role remove_from_all_with_role": {
+                    "description": "Every member with roleA will lose roleB (users that do not have roleB will not be affected).",
+                    "utilisation": "m/role remove_from_all_with_role MyUncoolRole MyOtherUncoolRole",
+                    "arguments": {
+                        "roleA": "Role the user must have.",
+                        "<roleCible>": "Role the user will lose."
+                    }
+                },
+                "role update_permissions_of_all": {
+                    "description": "Sets the permission value of all roles to a certain value.",
+                    "utilisation": "m/role update_permissions_of_all 268435518",
+                    "arguments": {
+                        "Permission value": "The integer value of the permission. Use the following website to calculate permission values: https://discordapi.com/permissions.html"
+                    }
                 }
             }
         }

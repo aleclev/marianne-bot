@@ -26,6 +26,10 @@ class Destiny(commands.Cog):
             return await ctx.send("**Destiny 2 Resources Folder: https://drive.google.com/open?id=1HbTh5gHBKPH1EZC9bYi9HFQBGzJcHbfZ**")
         else:
             return await ctx.send(f"{arg} doesn't correspond to any of my registered arguments for this command, here's the **Destiny 2 Resources Foler:** https://drive.google.com/open?id=1HbTh5gHBKPH1EZC9bYi9HFQBGzJcHbfZ")
+    
+    @commands.command(aliases=['wpinfo'])
+    async def weapon_info(self, ctx, *, nomArme: str):
+        return
 
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""

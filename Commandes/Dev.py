@@ -11,7 +11,7 @@ import datetime
 import time
 from discord.ext import commands, tasks
 from Classes import MarianneException as MarianneException
-from Fonctions import Erreur
+from Fonctions import Erreur, Permissions
 
 class Dev(commands.Cog):
     """
@@ -314,6 +314,47 @@ class Dev(commands.Cog):
     async def lever_attributeError(self, ctx):
         raise AttributeError
 
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def champs_bits(self, ctx, n: int):
+        listeBits = Permissions.listerBits(n, 64)
+        return await ctx.send(f"{len(listeBits)}\n{listeBits}")
+    
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def test_add_sans_ret(self, ctx, n1: int, n2: int):
+        liste1 = Permissions.listerBits(n1, 16)
+        liste2 = Permissions.listerBits(n2, 16)
+
+        liste3 = Permissions.addSansRetenues(liste1, liste2)
+
+        return await ctx.send(f"{liste1}\n{liste2}\n{liste3}\n")
+    
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def test_sous_sans_ret(self, ctx, n1: int, n2: int):
+        liste1 = Permissions.listerBits(n1, 16)
+        print(liste1)
+        liste2 = Permissions.listerBits(n2, 16)
+        print(liste2)
+
+        liste3 = Permissions.sousSansRetenues(liste1, liste2)
+
+        return await ctx.send(f"{liste1}\n{liste2}\n{liste3}\n")
+
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def int_vers_champs_vers_int(self, ctx, n: int):
+        liste = Permissions.listerBits(n, 16)
+        somme = Permissions.reconstruireChampsBits(liste)
+        return await ctx.send(f"{n}\n{liste}\n{somme}")
+
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def valeur_perm(self, ctx, role: discord.Role):
+        return await ctx.send(role.permissions.value)
+
     async def cog_command_error(self, ctx, error):
         """Gère tous les exceptions non-attrapées."""
-        return await Erreur.gestionnaire_erreur(ctx, error)
+        #return await Erreur.gestionnaire_erreur(ctx, error)
+        raise error
