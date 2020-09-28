@@ -178,7 +178,7 @@
                     }
                 },
                 "weapon_info": {
-                    "description": "",
+                    "description": "Unimplemented command.",
                     "utilisation": "",
                     "arguments": {
                         "<nomArme>": ""
@@ -188,7 +188,7 @@
         },
         "Role": {
             "nomModule": "Role",
-            "descriptionModule": "Contains commands to manage many roles at once.",
+            "descriptionModule": "Contains commands to manage many roles at once. Note: when passing roles as argument you can use the role name, role mention or role id.",
             "commandes": {
                 "role": {
                     "description": "Contains several sucommands.",

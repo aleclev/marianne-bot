@@ -64,7 +64,7 @@ class Util(commands.Cog):
                     message += argument + ": " + commandeJson["arguments"][argument] + "\n"
                 message += "```"
                 return await ctx.send(message)
-            return await ctx.send(f"Module {module} does not exist.")
+        return await ctx.send(f"Module {module} does not exist.")
     
     @commands.command()
     async def rng(self, ctx, limiteBas: int, limiteHaut: int):
