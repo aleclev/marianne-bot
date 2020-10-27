@@ -240,6 +240,30 @@
                     }
                 }
             }
+        },
+        "Clan": {
+            "nomModule": "Clan",
+            "descriptionModule": "Commands for interacting with the clans of Sherpa Run",
+            "commandes": {
+                "get_all_clans": {
+                    "description": "Returns a list of all registered clans and their tags.",
+                    "utilisation": "m/get_all_clans",
+                    "arguments": {}
+                },
+                "clan": {
+                    "description": "Command group.",
+                    "utilisation": "No use.",
+                    "arguments": {}
+                },
+                "clan apply": {
+                    "description": "Allows to send a clan application to the chosen clan.",
+                    "utilisation": "m/clan apply SL I heard this clan served free beer on Sundays, so I was hoping to join.",
+                    "arguments": {
+                        "ClanTag": "The clan's short identifier. Use 'm/get_all_clans' for a list of identifiers.",
+                        "Message": "A short message explaining why you want to join the clan."
+                    }
+                }
+            }
         }
     }
 }

@@ -2,10 +2,11 @@ import discord
 from discord.ext import commands
 from gtts import gTTS
 from Fonctions import Erreur
+from Classes.GestionnaireResources import GestionnaireResources
 
 class Marianne(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, gestRes : GestionnaireResources):
+        self.client = gestRes.client
 
     @commands.command()
     async def join(self, ctx):
@@ -65,8 +66,3 @@ class Marianne(commands.Cog):
             await clientVoix.disconnect()
         except AttributeError:
             return await ctx.send("I'm not currently in a voice channel. So...")
-
-
-    async def cog_command_error(self, ctx, error):
-        """Gère tous les exceptions non-attrapées."""
-        return await Erreur.gestionnaire_erreur(ctx, error)

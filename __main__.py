@@ -11,77 +11,41 @@ import requests
 import pydest
 from praw import Reddit
 from Commandes import Util, Dev, Tag, Steam, Moderation, Marianne, Tag, Enregistrement, Destiny, Role #Permet d'enlever une erreur avec le linting.
-from Fonctions import BaseDonnes, Message
-
-#TODO: Écrire un script pour transfèrer tous les données des tags enregistrés auparavant.
-#TODO: Remplacer les notifs pour le formulaire d'application au clan.
+from Commandes.SherpaRun import Clan
+from Classes import GestionnaireResources
+from Fonctions import BaseDonnes, Message, Erreur
 
 def main():
     #Importation de config.json
     with open("config.json", "r") as f:
         config = json.loads(f.read())
-
-    #Définition du client reddit
-    reddit = Reddit(client_id=config["reddit_id_client"],
-                        client_secret=config["redditClientSecret"],
-                        password=config["redditMotPasse"],
-                        user_agent=config["redditUtilisateurAgent"],
-                        username=config["redditNomUtilisateur"])
-
-    #Définition de la connection pymysql
-    connection_BD = pymysql.connect(host=config["bd_nom_hote"],
-                             user=config["bd_nom_utilisateur"],
-                             password=config["bd_mot_passe"],
-                             db=config["bd_nom"],
-                             charset='utf8mb4',
-                             autocommit=True,
-                             cursorclass=pymysql.cursors.DictCursor)
     
-    #Définition d'une session pour faire des requêtes à l'api de bungie.
-    sessionReq = requests.Session()
+    #Gestionnaire de resources
+    gestRes = GestionnaireResources.GestionnaireResources(config)
 
-    #Définition du client destiny
-    clientDest =pydest.Pydest(api_key=config["cleDestiny"])
+    #Liste des classes de modules/cogs cachés et visible. La visibilité influence la commande de documentation.
+    modulesVisibles = [
+        Util.Util,
+        Moderation.Moderation,
+        Marianne.Marianne,
+        Tag.Tag,
+        Enregistrement.Enregistrement,
+        Steam.Steam,
+        Destiny.Destiny,
+        Role.Role,
+        Clan.Clan
+    ]
 
-    #Définition du client discord
-    client = commands.Bot(command_prefix=config["prefix"], help_command=None)
+    modulesCaches = [
+        Dev.Dev,
+        BaseDonnes.BaseDonnes,
+        Message.MessagesFonctions
+    ]
 
-    #Ajout des cogs du client
-    #Cogs de commandes
-    client.add_cog(Util.Util(client, config=config))
-    client.add_cog(Dev.Dev(client, config=config, reddit=reddit, clientDest=clientDest, connectionBD=connection_BD))
-    client.add_cog(Moderation.Moderation(client))
-    client.add_cog(Marianne.Marianne(client))
-    client.add_cog(Tag.Tag(client, connectionBD=connection_BD))
-    client.add_cog(Enregistrement.Enregistrement(client, connectionBD=connection_BD, config=config))
-    client.add_cog(Steam.Steam(client, config=config, connectionBD=connection_BD, sessionReq=sessionReq, clientDest=clientDest))
-    client.add_cog(Destiny.Destiny(client))
-    client.add_cog(Role.Role(client))
-
-    #Marque tous les engrenages de cette section comme non cachés. (Utile dans les commandes de documentations)
-    listeEngr = client.cogs
-    for cogNom in listeEngr:
-        listeEngr[cogNom].cache = False
-    
-    #Cogs de Fonctions
-    client.add_cog(BaseDonnes.BaseDonnes(connectionBD=connection_BD))
-    client.add_cog(Message.MessagesFonctions(client=client))
-
-    #Marque tous les engrenages de cette section comme cachés. (Utile dans les commandes de documentations)
-    listeEngr = client.cogs
-    for cogNom in listeEngr:
-        if not hasattr(listeEngr[cogNom], "cache"): 
-            listeEngr[cogNom].cache = True
-
-    #Confirmation du bot en console.
-    @client.event
-    async def on_ready():
-        #Changement du statut
-        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="https://discord.gg/fsW94cN for help, demos, news and bug reports."))
-        print(f"{config['nom']} est en ligne!")
+    gestRes.initModules(modulesVisibles, modulesCaches)
 
     #Éxcecute le client discord
-    client.run(config["jetton"])
+    gestRes.client.run(config["jetton"])
 
     return 0
 

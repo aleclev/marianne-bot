@@ -18,16 +18,17 @@ async def gestionnaire_erreur(ctx: discord.ext.commands.Context, erreur: discord
     try:
         #Affiche les informations de l'exception dans la console. 
         try:
-            print(erreur.original.__dict__)
+            print("Erreur originale", erreur.original.__dict__)
         except:
             pass
-        print(erreur)
+        print("Erreur", type(erreur))
 
         #Liste blanche de commandes. Les commandes suivantes ne retourne aucun messages d'erreurs.
-        listeNomCommandes = ['react_above']
-        print(ctx.command.qualified_name)
-        if ctx.command.qualified_name in listeNomCommandes:
-            return await ctx.message.channel.delete_messages([ctx.message])
+        if ctx.command:
+            listeNomCommandes = ['react_above']
+            print(ctx.command.qualified_name)
+            if ctx.command.qualified_name in listeNomCommandes:
+                return await ctx.message.channel.delete_messages([ctx.message])
 
         #Erreurs levées par les commandes.
         if isinstance(erreur, commands.CommandError):
@@ -39,6 +40,9 @@ async def gestionnaire_erreur(ctx: discord.ext.commands.Context, erreur: discord
             
             if isinstance(erreur, commands.errors.CheckFailure):
                 return await ctx.send("**Exception caught!** Unauthorized access to command.")
+            
+            if isinstance(erreur, commands.errors.CommandNotFound):
+                return await ctx.send("**Exception caught!** Unknown command.")
 
         #Erreurs externe à la librairie discord.
         if hasattr(erreur, "original"):

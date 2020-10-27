@@ -4,11 +4,13 @@ Contient l'implémantation des commandes de Destiny.
 
 import discord
 from Fonctions import Erreur
+from Classes import GestionnaireResources
+from Classes.GestionnaireResources import GestionnaireResources
 from discord.ext import commands
 
 class Destiny(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, gestionnaireResources : GestionnaireResources):
+        self.client = gestionnaireResources.client
 
     #TODO: Trouver un moyen plus élégant de remplacer la commande.
     @commands.command(aliases=['r', 'res'])
@@ -30,7 +32,3 @@ class Destiny(commands.Cog):
     @commands.command(aliases=['wpinfo'])
     async def weapon_info(self, ctx, *, nomArme: str):
         return
-
-    async def cog_command_error(self, ctx, error):
-        """Gère tous les exceptions non-attrapées."""
-        return await Erreur.gestionnaire_erreur(ctx, error)

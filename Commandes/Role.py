@@ -3,10 +3,11 @@ import random
 from Fonctions import Erreur, Message, Permissions
 from Classes import MarianneException
 from discord.ext import commands
+from Classes.GestionnaireResources import GestionnaireResources
 
 class Role(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, gestRes : GestionnaireResources):
+        self.client = gestRes.client
     
     @commands.group()
     async def role(self, ctx):
@@ -327,7 +328,3 @@ class Role(commands.Cog):
                     rolePermValeur = role.permissions.value
                     await role.edit(permissions=discord.Permissions(permissions=Permissions.additioner_permissions(rolePermValeur, permValeur)))
             return await ctx.send("Task finished.")
-
-    async def cog_command_error(self, ctx, error):
-        """Gère tous les exceptions non-attrapées."""
-        return await Erreur.gestionnaire_erreur(ctx, error)

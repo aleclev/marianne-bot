@@ -10,7 +10,7 @@ import json
 import datetime
 import time
 from discord.ext import commands, tasks
-from Classes import MarianneException as MarianneException
+from Classes import MarianneException, GestionnaireResources
 from Fonctions import Erreur, Permissions
 
 class Dev(commands.Cog):
@@ -18,15 +18,15 @@ class Dev(commands.Cog):
     Engrenage pour développement. 
     Contient des commandes et des fonctions de tests.
     """
-    def __init__(self, client, config, reddit, clientDest, connectionBD):
+    def __init__(self, gestionnaireResources : GestionnaireResources):
         """
         Initialisation. On passe le client et le fichier config.
         """
-        self.client = client
-        self.config = config
-        self.reddit = reddit
-        self.clientDest = clientDest
-        self.connectionBD = connectionBD
+        self.client = gestionnaireResources.client
+        self.config = gestionnaireResources.config
+        self.reddit = gestionnaireResources.reddit
+        self.clientDest = gestionnaireResources.clientDest
+        self.connectionBD = gestionnaireResources.connectionBD
 
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -353,8 +353,3 @@ class Dev(commands.Cog):
     @commands.is_owner()
     async def valeur_perm(self, ctx, role: discord.Role):
         return await ctx.send(role.permissions.value)
-
-    async def cog_command_error(self, ctx, error):
-        """Gère tous les exceptions non-attrapées."""
-        #return await Erreur.gestionnaire_erreur(ctx, error)
-        raise error

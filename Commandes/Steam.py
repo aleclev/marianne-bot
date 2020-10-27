@@ -5,14 +5,14 @@ from Classes import MarianneException
 from pymysql import cursors
 from Fonctions import Erreur
 from discord.ext import commands
+from Classes.GestionnaireResources import GestionnaireResources
 
 class Steam(commands.Cog):
-    def __init__(self, client, config, connectionBD, sessionReq, clientDest):
-        self.client = client
-        self.connectionBD = connectionBD
-        self.config = config 
-        self.sessionReq = sessionReq
-        self.clientDest = clientDest
+    def __init__(self, gestRes : GestionnaireResources):
+        self.client = gestRes.client
+        self.connectionBD = gestRes.connectionBD
+        self.config = gestRes.config
+        self.clientDest = gestRes.clientDest
     
     @commands.group(aliases=["st"])
     async def steam(self, ctx):
@@ -171,8 +171,3 @@ class Steam(commands.Cog):
                                 messageEndroit = placeNom + activiteNom + activiteModeNom
 
                     return await ctx.send(f"Join code of: {ctx.message.author.mention}\nSteam name: **{nomSteam}**\nCurrent location: **{messageEndroit}**\nOpen slots: **{positionsOuvertes}**\n```/join {steamID}```\n{messageErreurEscouade}") 
-
-
-    async def cog_command_error(self, ctx, error):
-        """Gère tous les exceptions non-attrapées."""
-        return await Erreur.gestionnaire_erreur(ctx, error)

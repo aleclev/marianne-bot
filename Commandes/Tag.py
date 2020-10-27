@@ -8,13 +8,14 @@ import random
 import pymysql
 import asyncio
 from pymysql import cursors
-from Classes import MarianneException
+from Classes import MarianneException, GestionnaireResources
+from Classes.GestionnaireResources import GestionnaireResources
 from Fonctions import Message, Erreur
 
 class Tag(commands.Cog):
-    def __init__(self, client, connectionBD):
-        self.client = client
-        self.connectionBD = connectionBD
+    def __init__(self, gestRes : GestionnaireResources):
+        self.client = gestRes.client
+        self.connectionBD = gestRes.connectionBD
     
     @commands.group()
     async def tag(self, ctx):
@@ -148,8 +149,3 @@ class Tag(commands.Cog):
             if cur.rowcount == 0:
                 return await ctx.send(f"I couldn't find a tag named {tagNom}")
         return await ctx.send("The tag was successfully deleted.")
-
-    async def cog_command_error(self, ctx, error):
-        """Gère tous les exceptions non-attrapées."""
-        print(error)
-        await Erreur.gestionnaire_erreur(ctx, error)

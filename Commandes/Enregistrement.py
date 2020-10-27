@@ -5,15 +5,18 @@ certaines données des utilisateurs.
 import discord
 import steam
 import requests
+from Classes.GestionnaireResources import GestionnaireResources
+from Classes import MarianneException
 from Fonctions import Temps, Erreur, Message
 from discord.ext import commands
 from pymysql import cursors
 
 class Enregistrement(commands.Cog):
-    def __init__(self, client, connectionBD, config):
-        self.client = client
-        self.connectionBD = connectionBD
-        self.config = config
+    def __init__(self, gestRes : GestionnaireResources):
+        self.gestRes = gestRes
+        self.client = gestRes.client
+        self.connectionBD = gestRes.connectionBD
+        self.config = gestRes.config
 
     @commands.group()
     async def register(self, ctx):
@@ -63,22 +66,27 @@ class Enregistrement(commands.Cog):
 
         #Traitement si l'utilisateur n'a pas de code d'authorisation.
         else:
-            with self.connectionBD.cursor(cursor=cursors.Cursor) as cur:
-                #Vérification que l'utilisateur est enregistré sur Discord.
-                requete = "SELECT EXISTS(SELECT * FROM utilisateur WHERE discord_id=%s);"
-                cur.execute(requete, ctx.message.author.id)
-                #L'utilisateur n'est pas enregistré sur Discord.
-                if cur.fetchone()[0] == 0:
-                    return await ctx.send("You have to register in Discord first. You can do that by typing 'm/register discord'.")
-                #L'utilisateur est enregistré. On l'emmène vers le site web avec plus d'information.
-                else:
-                    await ctx.send("Alright, I'm gonna send you a private message with more info.")
-                    await Message.envoyerMessagePrive(ctx.message.author, "Here's what you'll need to do:\n"
-                                                                            "1 - Go to: https://aleclev.pythonanywhere.com/\n"
-                                                                            "2 - Follow the link to log into your steam account.\n"
-                                                                            "3 - After you log in, you will see an authentication code. Copy that code.\n"
-                                                                            "4 - Finally come back here and type 'm/register steam Code'. Replace 'Code' with the code you got after you logged in. Example: 'm/register steam abcdefghij'\n"
-                                                                            "**It's important you don't share your authentication code.\n Codes expire after 10 minutes for security.**")
+            if not (self.gestRes.verificateurBD.utilisateurEnregDiscord):
+                raise MarianneException.NonEnregDiscord
+            else:
+                await ctx.send("Alright, I'm gonna send you a private message with more info.")
+                await Message.envoyerMessagePrive(ctx.message.author, "Here's what you'll need to do:\n"
+                                                                        "1 - Go to: https://aleclev.pythonanywhere.com/\n"
+                                                                        "2 - Follow the link to log into your steam account.\n"
+                                                                        "3 - After you log in, you will see an authentication code. Copy that code.\n"
+                                                                        "4 - Finally come back here and type 'm/register steam Code'. Replace 'Code' with the code you got after you logged in. Example: 'm/register steam abcdefghij'\n"
+                                                                        "**It's important you don't share your authentication code.\n Codes expire after 10 minutes for security.**")
+    
+    #TODO: Commande ci-dessous
+    #@register.commands()
+    #async def timezone(self, ctx):
+    #    """Devra permettre à l'utilisateur d'enregistrer son fuseau horaire dans un dialog.
+    #    L'utilisateur peut alors formatter un message pour 
+    #
+    #    Args:
+    #        ctx ([type]): [description]
+    #    """
+    #    return
     
     @commands.command()
     async def whoami(self, ctx):
@@ -92,8 +100,4 @@ class Enregistrement(commands.Cog):
                 print(res)
                 return await ctx.send("The following is a list of ids you've registered with me. Ids are public and serve only to identify you.\n"
                                         f"```Discord profile id: {res['discord_id']}\n"
-                                        f"Steam profile id:      {res['steam_id']}\n```")
-
-    async def cog_command_error(self, ctx, error):
-        """Gère tous les exceptions non-attrapées."""
-        return await Erreur.gestionnaire_erreur(ctx, error)
+                                        f"Steam profile id: {res['steam_id']}\n```")

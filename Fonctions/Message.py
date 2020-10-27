@@ -1,10 +1,12 @@
 import asyncio
 import discord
+from Classes.GestionnaireResources import GestionnaireResources
 from discord.ext import commands
 
 class MessagesFonctions(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, gestRes : GestionnaireResources):
+        self.gestRes = gestRes
+        self.client = gestRes.client
     
     @commands.Cog.listener()
     async def on_message_delete(self, message):
@@ -18,6 +20,7 @@ class MessagesFonctions(commands.Cog):
         """
         if message.mention_everyone:
             return await message.channel.send(f"**DETECTED DELETED MESSAGE WITH EVERYONE/HERE MENTION**\n**Author:** {message.author.mention}\n**Content:** ```{message.content}```\nMany people agree that deleting messages with mentions in them is not boss. Be careful.")
+
 
 async def demanderEntree(ctx: discord.ext.commands.Context, client: discord.Client, verification=None, messageEnvoye="An input is required...", 
                                     timeout=60, supprimerMessagesBot=True, supprimerMessageUtilisateur=True) -> str:
