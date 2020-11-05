@@ -18,7 +18,7 @@ async def gestionnaire_erreur(ctx: discord.ext.commands.Context, erreur: discord
     try:
         #Affiche les informations de l'exception dans la console. 
         try:
-            print("Erreur originale", erreur.original.__dict__)
+            print("Erreur originale", erreur.original)
         except:
             pass
         print("Erreur", type(erreur))

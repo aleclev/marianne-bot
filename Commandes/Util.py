@@ -9,7 +9,6 @@ class Util(commands.Cog):
     def __init__(self, gestRes : GestionnaireResources):
         self.client = gestRes.client
 
-    #TODO: Améliorer l'accessibilité  de la commande.
     #TODO: Moyen pour envoyer un message plus long que 2000 caractères.
     @commands.command()
     async def help(self, ctx, module: str = "", *, commande: str = ""):

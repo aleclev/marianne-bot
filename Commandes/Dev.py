@@ -9,6 +9,7 @@ import random
 import json
 import datetime
 import time
+import asyncio
 from discord.ext import commands, tasks
 from Classes import MarianneException, GestionnaireResources
 from Fonctions import Erreur, Permissions
@@ -353,3 +354,12 @@ class Dev(commands.Cog):
     @commands.is_owner()
     async def valeur_perm(self, ctx, role: discord.Role):
         return await ctx.send(role.permissions.value)
+
+    @commands.command()
+    @commands.is_owner()
+    async def test_embed(self, ctx):
+        embed = discord.Embed()
+        embed.set_image(url="https://i.kym-cdn.com/photos/images/original/001/517/016/cf1.jpg")
+        for x in range(0, 10):
+            await ctx.send(embed=embed)
+            await asyncio.sleep(0.4)
