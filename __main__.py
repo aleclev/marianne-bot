@@ -43,7 +43,7 @@ def main():
         Message.MessagesFonctions
     ]
 
-    gestRes.initModules(modulesVisibles, modulesCaches, True)
+    gestRes.initModules(modulesVisibles, modulesCaches)
 
     #Éxcecute le client discord
     gestRes.client.run(config["jetton"])
