@@ -20,7 +20,7 @@ class GestionnaireResources():
         #Définition du client discord
         #Définition des intents. Rejette certains type d'events.
         intent = discord.Intents.all()
-        #intent.presences = True
+        intent.presences = True
         intent.members = True
         intent.bans = False
         intent.emojis = False

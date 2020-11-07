@@ -105,7 +105,7 @@ def codifierListe(liste: list) -> str:
 def reqListeNotifTagDansMessage(message: str) -> list:
     #Marqueur utilisé pour marquer un notiftag. Tous les caractères après le marqueur jusqu'au premier espace est le notiftag.
     marqueur = "m#"
-
+    
     if marqueur not in message:
         return []
     
