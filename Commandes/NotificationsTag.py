@@ -96,7 +96,7 @@ class NotificationsTag(commands.Cog):
             message (discord.Message): Le message envoyé par l'évenement.
         """
         #Empêcher Marianne de répondre à son propre message.
-        if self.gestRes.client.user.id == message.author.id:
+        if self.gestRes.client.user.bot:
             return
 
         listeTags = Message.reqListeNotifTagDansMessage(message.content)
