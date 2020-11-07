@@ -12,7 +12,7 @@ import time
 import asyncio
 from discord.ext import commands, tasks
 from Classes import MarianneException, GestionnaireResources
-from Fonctions import Erreur, Permissions
+from Fonctions import Erreur, Permissions, Message
 
 class Dev(commands.Cog):
     """
@@ -28,6 +28,7 @@ class Dev(commands.Cog):
         self.reddit = gestionnaireResources.reddit
         self.clientDest = gestionnaireResources.clientDest
         self.connectionBD = gestionnaireResources.connectionBD
+        self.gestRes = gestionnaireResources
 
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -363,3 +364,30 @@ class Dev(commands.Cog):
         for x in range(0, 10):
             await ctx.send(embed=embed)
             await asyncio.sleep(0.4)
+    
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def reqStatus(self, ctx: commands.Context):
+        print(ctx.message.author.raw_status)
+        if ctx.message.author.status != discord.Status.offline:
+            return await ctx.send("ouaip, t'es en ligne")
+        else:
+            return await ctx.send("non, t'es hors ligne")
+
+    @commands.command()
+    @commands.is_owner()
+    async def test_notiftag(self, ctx: commands.Context, *, message):
+        return await ctx.send(message + "\n" + str(Message.reqListeNotifTagDansMessage(message)))
+    
+    @commands.command()
+    @commands.is_owner()
+    async def test_req_util_tag(self, ctx: commands.Context, *, message):
+        liste = Message.reqListeNotifTagDansMessage(message)
+        liste = self.gestRes.accesseurBD.reqTousAbonnesParListe(liste)
+        return await ctx.send(Message.codifierListe(liste))
+    
+    @commands.command()
+    @commands.is_owner()
+    async def test_get_member(self, ctx: commands.Context, id: int):
+        utilistateur = await ctx.guild.fetch_member(id)
+        return await ctx.send(utilistateur)

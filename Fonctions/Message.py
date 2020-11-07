@@ -59,7 +59,7 @@ async def demanderEntree(ctx: discord.ext.commands.Context, client: discord.Clie
     
     return entree
 
-async def envoyerMessagePrive(utilisateur: discord.User, message: str):
+async def envoyerMessagePrive(utilisateur: discord.User, message: str=None, embed: discord.Embed=None):
     """La fonction créer une chaine de message privés au besoin, puis envoie à l'utilisateur le message.
 
     Args:
@@ -68,4 +68,58 @@ async def envoyerMessagePrive(utilisateur: discord.User, message: str):
     """
     if utilisateur.dm_channel == None:
         await utilisateur.create_dm()
-    await utilisateur.dm_channel.send(message)
+    if message:
+        await utilisateur.dm_channel.send(message)
+    if embed:
+        await utilisateur.dm_channel.send(embed=embed)
+
+def reqNotifTags(self, message: str) -> list:
+    """Retourne la liste de NotifTags dans le message.
+    Les NotifTags sont formaté ainsi: m![tag]
+
+    Args:
+        message (str): Le message à scanner
+
+    Returns:
+        list: La liste <str> des NotifTags présent dans le message.
+    """
+    return []
+
+def codifierListe(liste: list) -> str:
+    """Retourne tous les éléments d'une liste str en code markdown. Les éléments sont listés à la verticale.
+
+    Args:
+        liste (list): La liste de str.
+
+    Returns:
+        str: Le str formaté.
+    """
+    message = "```\n"
+    for elem in liste:
+        message += str(elem)
+        message += "\n"
+    message += "```"
+
+    return message
+
+def reqListeNotifTagDansMessage(message: str) -> list:
+    #Marqueur utilisé pour marquer un notiftag. Tous les caractères après le marqueur jusqu'au premier espace est le notiftag.
+    marqueur = "m#"
+
+    if marqueur not in message:
+        return []
+    
+    #Séparé en liste par les espaces.
+    listeCoupee = message.split(" ")
+    #La liste qui sera retournée à la fin.
+    listeRetour = []
+
+    for elem in listeCoupee:
+        if marqueur in elem:
+            entree = elem.replace(marqueur, "").replace(" ", "")
+            filtre = filter(str.isalnum, entree)
+            entree = "".join(filtre)
+            
+            listeRetour.append(entree)
+    
+    return listeRetour

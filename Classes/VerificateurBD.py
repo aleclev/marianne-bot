@@ -74,3 +74,29 @@ class VerificateurBD():
             else:
                 #Cette ligne ne devrait jamais être atteinte.
                 raise MarianneException.ErreurBD()
+        
+    def utilisateurEstNotifTagsBloque(self, utilisateur: discord.User, utilisateurBloque: discord.User) -> bool:
+        """Vérifie s'il existe un lien de bloquage entre utilisateur et utilisateurBloque.
+
+        Args:
+            utilisateur (discord.User): L'utilisateur.
+            utilisateurBloque (discord.User): L'utilisateur bloqué.
+
+        Returns:
+            bool: Vrai si utilisateur bloque les notifs de utilisateurBloque.
+        """
+        with self.connectionBD.cursor(cursor=pymysql.cursors.Cursor) as cur:
+            requete = "SELECT EXISTS(SELECT * FROM blocage_notiftag bnt WHERE bnt.utilisateur_discord_id=%s AND bnt.utilisateur_bloque_discord_id=%s);"
+            cur.execute(requete, (utilisateur.id, utilisateurBloque.id))
+            res = cur.fetchone()[0]
+            
+            #L'entrée n'existe pas.
+            if res == 0:
+                return False
+            
+            #L'entrée existe.
+            elif res == 1:
+                return True
+            else:
+                #Cette ligne ne devrait jamais être atteinte.
+                raise MarianneException.ErreurBD()

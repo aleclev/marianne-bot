@@ -18,7 +18,23 @@ class GestionnaireResources():
         self.config = config
 
         #Définition du client discord
-        self.client = commands.Bot(command_prefix=config["prefix"], help_command=None)
+        #Définition des intents. Rejette certains type d'events.
+        intent = discord.Intents.all()
+        #intent.presences = True
+        intent.members = True
+        intent.bans = False
+        intent.emojis = False
+        intent.integrations = False
+        intent.webhooks = False
+        intent.invites = False
+        intent.reactions = False
+        intent.guild_reactions = False
+        intent.dm_reactions = False
+        intent.typing = False
+        intent.guild_typing = False
+        intent.dm_typing = False
+
+        self.client = commands.Bot(command_prefix=config["prefix"], help_command=None, intents=intent)
 
         #Définition du client reddit
         self.reddit = Reddit(client_id=config["reddit_id_client"],
@@ -46,7 +62,7 @@ class GestionnaireResources():
         self.verificateurBD = VerificateurBD.VerificateurBD(self.connectionBD)
         self.accesseurBD = AccesseurBD.AcesseurBD(self.connectionBD)
     
-    def initModules(self, modulesVisibles : list = [], modulesCaches : list = []):
+    def initModules(self, modulesVisibles : list = [], modulesCaches : list = [], DEBUG: bool = False):
         """Permet d'initialiser une liste de modules. Les modules doivent être des classes qui héritent 
         de commands.Cog. LA CLASSE DOIT ÊTRE PASSÉE. Cette fonction utilise le constructeur. La liste de 
         modules visible sera visible au commandes de documentation. La liste de modules cachés ne le sera pas.
@@ -61,8 +77,9 @@ class GestionnaireResources():
             """Gestionnaire d'erreur générique. Redirige les erreurs des cogs visibles vers le gestionnaire d'erreur."""
             return await Erreur.gestionnaire_erreur(ctx, error)
 
-        #Gestionnaire d'erreur global.
-        self.client.on_command_error = on_command_error
+        #Gestionnaire d'erreur global. Sauf en mode DEBUG
+        if not DEBUG:
+            self.client.on_command_error = on_command_error
 
         #Initialisation des modules visibles
         for module in modulesVisibles:

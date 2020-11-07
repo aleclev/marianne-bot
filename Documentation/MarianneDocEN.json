@@ -262,6 +262,65 @@
                         "ClanTag": "The clan's short identifier. Use 'm/get_all_clans' for a list of identifiers.",
                         "Message": "A short message explaining why you want to join the clan."
                     }
+                },
+                "get_all_clan": {
+                    "description": "",
+                    "utilisation": "",
+                    "arguments": {}
+                }
+            }
+        },
+        "NotificationsTag": {
+            "nomModule": "NotifTag",
+            "descriptionModule": "Allows you to subscribe to tags. When a tag is put into a message, you will be notified. You can tag your message by adding: m#[tag]",
+            "commandes": {
+                "notif": {
+                    "description": "Group name for this module.",
+                    "utilisation": "Cannot be used.",
+                    "arguments": {}
+                },
+                "notif unblock": {
+                    "description": "Unblock a previously blocked user.",
+                    "utilisation": "m/notif unblock 1234567890",
+                    "arguments": {
+                        "user_id": "The discord id of the person you wish to unblock."
+                    }
+                },
+                "notif blacklist": {
+                    "description": "Returns a list of all the users you've blocked.",
+                    "utilisation": "m/notif blacklist",
+                    "arguments": {}
+                },
+                "notif add": {
+                    "description": "Add a tag to your list. When the tag gets mentionned, you will receive a notification.",
+                    "utilisation": "m/notif add sherpa\nm/notif add gos",
+                    "arguments": {
+                        "tagName": "The name of the tag you wish to register."
+                    }
+                },
+                "notif remove": {
+                    "description": "Removes a previously registered tag.",
+                    "utilisation": "m/notif remove sherpa\nm/notif remove gos",
+                    "arguments": {
+                        "tagName": "The name of the tag you wish to remove."
+                    }
+                },
+                "notif list_all": {
+                    "description": "Returns a list of all you're registered tags.",
+                    "utilisation": "m/notif list_all",
+                    "arguments": {}
+                },
+                "notif remove_all": {
+                    "description": "Removes all your registered tags.",
+                    "utilisation": "m/notif remove_all",
+                    "arguments": {}
+                },
+                "notif block": {
+                    "description": "Blocks a user. You will not receive notifications when this user mentions a tag you've registered.",
+                    "utilisation": "m/notif block 1234567890",
+                    "arguments": {
+                        "user_id": "The discord id of the user you wish to block."
+                    }
                 }
             }
         }

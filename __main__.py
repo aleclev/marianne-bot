@@ -10,7 +10,7 @@ import pymysql
 import requests
 import pydest
 from praw import Reddit
-from Commandes import Util, Dev, Tag, Steam, Moderation, Marianne, Tag, Enregistrement, Destiny, Role #Permet d'enlever une erreur avec le linting.
+from Commandes import Util, Dev, Tag, Steam, Moderation, Marianne, Tag, Enregistrement, Destiny, Role, NotificationsTag #Permet d'enlever une erreur avec le linting.
 from Commandes.SherpaRun import Clan
 from Classes import GestionnaireResources
 from Fonctions import BaseDonnes, Message, Erreur
@@ -33,7 +33,8 @@ def main():
         Steam.Steam,
         Destiny.Destiny,
         Role.Role,
-        Clan.Clan
+        Clan.Clan,
+        NotificationsTag.NotificationsTag
     ]
 
     modulesCaches = [
@@ -42,7 +43,7 @@ def main():
         Message.MessagesFonctions
     ]
 
-    gestRes.initModules(modulesVisibles, modulesCaches)
+    gestRes.initModules(modulesVisibles, modulesCaches, True)
 
     #Éxcecute le client discord
     gestRes.client.run(config["jetton"])

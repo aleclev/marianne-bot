@@ -3,7 +3,7 @@ Une option pour que Marianne notifie les utilisateurs quand un certain évèneme
 Commande pour afficher de l'information sur le fuseau horaire de l'utilisateur.
 
 Module Notifs:
-Les utilisateurs peuvent s'abonnés à un tag de notifications. Un autre utilisateur peut envoyer un message formaté avec un tag de notifications spécifique pour envoyer un message à tous les utilisateurs abonnés. Les messages ne sont pas envoyés aux utilisateurs hors ligne. Les tags ne sont pas définis par les utilisateurs.
+Les utilisateurs peuvent s'abonnés à un tag de notifications. Un autre utilisateur peut envoyer un message formaté avec un tag de notifications spécifique pour envoyer un message à tous les utilisateurs abonnés. Les messages ne sont pas envoyés aux utilisateurs hors ligne. Les tags ne sont pas définis par les utilisateurs. Format: m![nomTag] e.g. m!gos m!prestige
 
 Fonctions auxilliaires:
 Bloquer les messages d'un utilisateur spécifique. Recevoir des message méme quand hors ligne.
