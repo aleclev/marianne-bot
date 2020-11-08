@@ -43,7 +43,7 @@ def main():
         Message.MessagesFonctions
     ]
 
-    gestRes.initModules(modulesVisibles, modulesCaches, DEBUG=True)
+    gestRes.initModules(modulesVisibles, modulesCaches)
 
     #Éxcecute le client discord
     gestRes.client.run(config["jetton"])
@@ -52,4 +52,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
