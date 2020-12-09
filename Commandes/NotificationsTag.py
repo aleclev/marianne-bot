@@ -104,38 +104,53 @@ class NotificationsTag(commands.Cog):
         #Retour si la liste est vide (aucun tag mentionné)
         if listeTags == []:
             return
-        
-        await message.channel.send(f"Notifying users with the following registered tags:\n{Message.codifierListe(listeTags)}")
+
+        #Tag qui retourne la fonction. Permet d'écrire certains messages sans qu'une notif soit envoyée.
+        if "override" in listeTags:
+            return
+
+        #Tag ALL qui sera toujours appelé. Permet aux utilisateurs d'être tous le temps notifié.
+        listeTags.append("ALL")
 
         urlMessage = "https://discordapp.com/channels/" + str(message.guild.id) + "/" + str(message.channel.id) + "/" + str(message.id)
         
         listeUtilisateurs_id = self.gestRes.accesseurBD.reqTousAbonnesParListe(listeTags)
-        for id in listeUtilisateurs_id:
-            try:
-                utilisateur = message.guild.get_member(id)
-                if not utilisateur:
-                    utilisateur = await message.guild.fetch_member(id)
+
+        await message.channel.send(f"Found {len(listeUtilisateurs_id)} users in tags:\n{Message.codifierListe(listeTags)}\nSending notifications...")
+
+        if "BLOCK" in listeTags:
+            return await message.channel.send("Detected tag BLOCK. Notifications will not be sent.")
+        
+        #Montre à l'utilisateur que la fonction est toujours en cours de traitement.
+        async with message.channel.typing():
+            for id in listeUtilisateurs_id:
+                try:
+                    #permet de ne pas envoyer de message à un utilisateur qui n'est pas sur le serveur courant (member n'existera pas)
+                    utilisateur = message.guild.get_member(id)
                     if not utilisateur:
+                        utilisateur = await message.guild.fetch_member(id)
+                        if not utilisateur:
+                            continue
+                    
+                    #Si l'utilisateur est bloqué on continue.
+                    if self.gestRes.verificateurBD.utilisateurEstNotifTagsBloque(utilisateur, message.author):
                         continue
-                print(utilisateur)
-                
-                #Si l'utilisateur est bloqué on continue.
-                if self.gestRes.verificateurBD.utilisateurEstNotifTagsBloque(utilisateur, message.author):
+
+                    #On empêche Marianne d'envoyer un message à l'utilisateur ayant écrit le message.
+                    if id == message.author.id:
+                        continue
+
+                    #On empêche d'envoyer le message si l'utilisateur est hors ligne.
+                    if utilisateur.status == discord.Status.offline:
+                        continue
+
+                    embed = discord.Embed(title="Notification Tag Ping", description="One of your registered tags was mentionned.")
+                    embed.add_field(name="Sender", value=f"{message.author.display_name}\nid={message.author.id}", inline=True)
+                    embed.add_field(name="Message content", value=message.content, inline=True)
+                    embed.add_field(name="Message Link", value=urlMessage, inline=True)
+                    embed.add_field(name="Tip", value=f"If you no longer wish to receive notifications from this user, you can type: m/notif block {message.author.id}", inline=True)
+                    await Message.envoyerMessagePrive(utilisateur, embed=embed)
+                except:
                     continue
 
-                #On empêche Marianne d'envoyer un message à l'utilisateur ayant écrit le message.
-                if id == message.author.id:
-                    continue
-
-                #On empêche d'envoyer le message si l'utilisateur est hors ligne.
-                if utilisateur.status == discord.Status.offline:
-                    continue
-
-                embed = discord.Embed(title="Notification Tag Ping", description="One of your registered tags was mentionned.")
-                embed.add_field(name="Sender", value=f"{message.author.display_name}\nid={message.author.id}")
-                embed.add_field(name="Message content", value=message.content)
-                embed.add_field(name="Message Link", value=urlMessage)
-                embed.add_field(name="Tip", value=f"If you no longer wish to receive notifications from this user, you can type: m/notif block {message.author.id}")
-                await Message.envoyerMessagePrive(utilisateur, embed=embed)
-            except:
-                continue
+            await message.channel.send("All notifications sent.")

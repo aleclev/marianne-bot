@@ -5,6 +5,7 @@ Contient des fonctions pour gèrer les erreurs.
 import discord
 from discord.ext import commands
 from Classes import MarianneException
+import pymysql
 
 serveurAideURL = "https://discord.gg/fsW94cN"
 
@@ -46,6 +47,7 @@ async def gestionnaire_erreur(ctx: discord.ext.commands.Context, erreur: discord
 
         #Erreurs externe à la librairie discord.
         if hasattr(erreur, "original"):
+            #Erreur de Python
             if isinstance(erreur.original, AttributeError):
                 return await ctx.send(f"**Exception caught!** Please report this exception to the help server. ```{serveurAideURL}```")
             
@@ -64,6 +66,16 @@ async def gestionnaire_erreur(ctx: discord.ext.commands.Context, erreur: discord
             
             if isinstance(erreur.original, MarianneException.PermissionsDiscordManquante):
                 return await ctx.send(f"**Exception Caught**! I need the following permission(s) for this command: {erreur.original.permission}.")
+        
+            #Erreur de MYSQL
+            if isinstance(erreur.original, pymysql.Error):
+                print("Erreur MYSQL")
+                #errno
+                print(erreur.original.args[0])
+
+                #Duplicate entry
+                if (erreur.original.args[0] == 1062):
+                    return await ctx.send(f"**Exception Caught**! Database entry already exists. Entry cannot be written.")
         
         #Type d'erreurs non gèrées
         return await ctx.send(f"**Exception caught!** This exception is not handled. Please report it to the help server. ```{serveurAideURL}```")
