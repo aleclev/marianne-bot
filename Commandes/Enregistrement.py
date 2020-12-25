@@ -87,6 +87,17 @@ class Enregistrement(commands.Cog):
     #        ctx ([type]): [description]
     #    """
     #    return
+
+    @register.command()
+    async def bungie(self, ctx: commands.Context):
+        if not self.gestRes.verificateurBD.utilisateurEnregSteam(ctx.author):
+            raise MarianneException.NonEnregSteam()
+
+        id_bungie = await self.gestRes.accesseurBD.reqIDBungieHTTP(ctx.author)
+
+        self.gestRes.accesseurBD.enregUtilisateurBungie(id_bungie, ctx.author.id)
+
+        return await ctx.send("Operation successful.")
     
     @commands.command()
     async def whoami(self, ctx):
@@ -98,6 +109,7 @@ class Enregistrement(commands.Cog):
                 return await ctx.send("Your Discord account is not registered.")
             else:
                 print(res)
-                return await ctx.send("The following is a list of ids you've registered with me. Ids are public and serve only to identify you.\n"
+                return await ctx.send("The following is a list of ids you've registered with me. IDs are public and serve only to identify you.\n"
                                         f"```Discord profile id: {res['discord_id']}\n"
-                                        f"Steam profile id: {res['steam_id']}\n```")
+                                        f"Steam profile id: {res['steam_id']}\n"
+                                        f"Bungie profile id: {res['bungie_id']}\n```")

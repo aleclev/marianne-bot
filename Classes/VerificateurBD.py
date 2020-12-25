@@ -35,6 +35,31 @@ class VerificateurBD():
             else:
                 #Cette ligne ne devrait jamais être atteinte.
                 raise MarianneException.ErreurBD()
+
+    def utilisateurEnregBungie(self, utilisateur : discord.User) -> bool:
+        """Vérifie qu'un utilisateur a enregistré son profile bungie.
+
+        Args:
+            utilisateur (discord.User): L'utilisateur à vétifier
+
+        Raises:
+            MarianneException.ErreurBD: Erreur de formating dans la réponse.
+
+        Returns:
+            bool: True si l'utilisateur est enregistré
+        """
+        with self.connectionBD.cursor(cursor=pymysql.cursors.Cursor) as cur:
+            requete = "SELECT EXISTS(SELECT * FROM utilisateur WHERE discord_id=%s AND bungie_id IS NOT NULL);"
+            cur.execute(requete, utilisateur.id)
+            res = cur.fetchone()[0]
+            #L'utilisateur n'est pas enregistré sur Discord.
+            if res == 0:
+                return False
+            elif res == 1:
+                return True
+            else:
+                #Cette ligne ne devrait jamais être atteinte.
+                raise MarianneException.ErreurBD()
         
     def utilisateurEnregDiscord(self, utilisateur : discord.User) -> bool:
         """Vérifi si le profile discord de l'utilisateur est enregistré.

@@ -96,8 +96,14 @@ class NotificationsTag(commands.Cog):
             message (discord.Message): Le message envoyé par l'évenement.
         """
         #Empêcher Marianne de répondre à d'autres bots
+        if self.gestRes.config["ignore_notiftag"] == 1:
+            return
+        
         if message.author.bot:
             return
+
+        if not self.gestRes.verificateurBD.utilisateurEnregDiscord(message.author):
+            raise MarianneException.NonEnregDiscord()
 
         listeTags = Message.reqListeNotifTagDansMessage(message.content)
 
@@ -113,6 +119,9 @@ class NotificationsTag(commands.Cog):
         listeTags.append("ALL")
 
         urlMessage = "https://discordapp.com/channels/" + str(message.guild.id) + "/" + str(message.channel.id) + "/" + str(message.id)
+
+        #Retire ALL de la liste.
+        listeTags.pop()
         
         listeUtilisateurs_id = self.gestRes.accesseurBD.reqTousAbonnesParListe(listeTags)
 

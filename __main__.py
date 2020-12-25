@@ -12,10 +12,11 @@ import pydest
 from praw import Reddit
 from Commandes import Util, Dev, Tag, Steam, Moderation, Marianne, Tag, Enregistrement, Destiny, Role, NotificationsTag #Permet d'enlever une erreur avec le linting.
 from Commandes.SherpaRun import Clan
+from Commandes.SherpaRun import Role as RoleSR
 from Classes import GestionnaireResources
 from Fonctions import BaseDonnes, Message, Erreur
 
-def main():
+def main() -> int:
     #Importation de config.json
     with open("config.json", "r") as f:
         config = json.loads(f.read())
@@ -34,7 +35,8 @@ def main():
         Destiny.Destiny,
         Role.Role,
         Clan.Clan,
-        NotificationsTag.NotificationsTag
+        NotificationsTag.NotificationsTag#,
+        #RoleSR.Role
     ]
 
     modulesCaches = [
@@ -43,7 +45,7 @@ def main():
         Message.MessagesFonctions
     ]
 
-    gestRes.initModules(modulesVisibles, modulesCaches)
+    gestRes.initModules(modulesVisibles, modulesCaches, True)
 
     #Éxcecute le client discord
     gestRes.client.run(config["jetton"])

@@ -11,6 +11,7 @@ from discord.ext import commands
 class Destiny(commands.Cog):
     def __init__(self, gestionnaireResources : GestionnaireResources):
         self.client = gestionnaireResources.client
+        self.gestRes = gestionnaireResources
 
     #TODO: Trouver un moyen plus élégant de remplacer la commande.
     @commands.command(aliases=['r', 'res'])
@@ -32,3 +33,22 @@ class Destiny(commands.Cog):
     @commands.command(aliases=['wpinfo'])
     async def weapon_info(self, ctx, *, nomArme: str):
         return
+    
+    @commands.command()
+    async def raid_compl(self, ctx: commands.Context):
+        listeActiv = self.gestRes.accesseurBD.getTousActivInfo()
+        id_bungie = await self.gestRes.accesseurBD.reqIDBungie(ctx.author)
+        listeIDPerso = self.gestRes.accesseurBD.reqListeIDPersonnagesDest(id_bungie)
+        listeDonneesPerso = await self.gestRes.accesseurBD.reqDonneesPersonnage(id_bungie, listeIDPerso)
+        print(listeDonneesPerso)
+        
+        message = "```"
+
+        for activ in listeActiv:
+            listeHash = self.gestRes.accesseurBD.reqListeHashParIdRaid(activ["activ_id"])
+            print(listeHash)
+            compte = self.gestRes.accesseurBD.compterCompletions(listeDonneesPerso, listeHash)
+            message += activ["activ_nom"] + " " + str(compte) + "\n"
+        message += "```"
+
+        return await ctx.send(message)

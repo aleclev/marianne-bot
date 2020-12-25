@@ -102,6 +102,25 @@ def codifierListe(liste: list) -> str:
 
     return message
 
+def codifierListeIndex(liste: list) -> str:
+    """Retourne tous les éléments d'une liste str en code markdown. Les éléments sont listés à la verticale. Les éléments sont numerotés de 0.
+
+    Args:
+        liste (list): La liste de str.
+
+    Returns:
+        str: Le str formaté.
+    """
+    i = 0
+    message = "```\n"
+    for elem in liste:
+        message += f"{str(i)}. {str(elem)}"
+        message += "\n"
+        i += 1
+    message += "```"
+
+    return message
+
 def reqListeNotifTagDansMessage(message: str) -> list:
     #Marqueur utilisé pour marquer un notiftag. Tous les caractères après le marqueur jusqu'au premier espace est le notiftag.
     marqueur = "m#"

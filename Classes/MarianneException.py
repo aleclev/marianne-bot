@@ -12,6 +12,11 @@ class NonEnregDiscord(Exception):
     def __init__(self):
         pass
 
+class NonEnregBungie(Exception):
+    """Erreur associée à un utilisateur sans bungie_id enregistré dans la base de données."""
+    def __init__(self):
+        pass
+
 class MauvaiseEntree(Exception):
     """Erreur associée à une entrée invalide."""
     def __init__(self):

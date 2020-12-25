@@ -60,6 +60,9 @@ async def gestionnaire_erreur(ctx: discord.ext.commands.Context, erreur: discord
             
             if isinstance(erreur.original, MarianneException.NonEnregSteam):
                 return await ctx.send("**Exception caught!** You must be registered with me on Steam to use this command. Use the following commands: 'm/register discord' and 'm/register steam'.")
+
+            if isinstance(erreur.original, MarianneException.NonEnregBungie):
+                return await ctx.send("**Exception caught!** You must be registered with me on Bungie to use this command. Use the following commands: 'm/register discord', 'm/register steam' and 'm/register bungie'.")
             
             if isinstance(erreur.original, MarianneException.MauvaiseEntree):
                 return await ctx.send("**Exception caught!** Bad entry.")

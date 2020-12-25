@@ -60,7 +60,7 @@ class GestionnaireResources():
 
         #Définition du Vérificateur/Accesseur de la base de données
         self.verificateurBD = VerificateurBD.VerificateurBD(self.connectionBD)
-        self.accesseurBD = AccesseurBD.AcesseurBD(self.connectionBD)
+        self.accesseurBD = AccesseurBD.AcesseurBD(self.connectionBD, self.config)
     
     def initModules(self, modulesVisibles : list = [], modulesCaches : list = [], DEBUG: bool = False):
         """Permet d'initialiser une liste de modules. Les modules doivent être des classes qui héritent 

@@ -391,3 +391,15 @@ class Dev(commands.Cog):
     async def test_get_member(self, ctx: commands.Context, id: int):
         utilistateur = await ctx.guild.fetch_member(id)
         return await ctx.send(utilistateur)
+    
+    @commands.command()
+    @commands.is_owner()
+    async def peuplerraid_vers_hash(self, ctx: commands.context):
+        await self.gestRes.accesseurBD._peuplerraid_vers_hash()
+        return await ctx.send("Opération terminée.")
+    
+    @commands.command()
+    @commands.is_owner()
+    async def test_raid_compl(self, ctx: commands.context, id_raid: int):
+        compltot = await self.gestRes.accesseurBD.reqCompletionsActivID(ctx.author, id_raid)
+        return await ctx.send(str(compltot))
