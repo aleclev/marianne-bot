@@ -45,7 +45,8 @@ def main() -> int:
         Message.MessagesFonctions
     ]
 
-    gestRes.initModules(modulesVisibles, modulesCaches, True)
+    #option pour debug
+    gestRes.initModules(modulesVisibles, modulesCaches, config["debug"] == 1)
 
     #Éxcecute le client discord
     gestRes.client.run(config["jetton"])
